@@ -11,9 +11,18 @@ WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
 reps = 0
+timer = None
 
 
 # ---------------------------- TIMER RESET ------------------------------- #
+def reset_timer():
+    global reps
+    window.after_cancel(timer)
+    reps = 0
+    canvas.itemconfig(timer_text, text="00:00")
+    title_label.config(text="Timer", fg=GREEN, font=(FONT_NAME, 50, "bold"), bg=YELLOW)
+    check_mark_label.config(text="")
+
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 def start_timer():
@@ -43,9 +52,15 @@ def count_down(count):
 
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
     if count > 0:
-        window.after(1000, count_down, count - 1)  # count-1 will be the parameter of the count_down function
+        global timer
+        timer = window.after(1, count_down, count - 1)  # count-1 will be the parameter of the count_down function
     else:
         start_timer()
+        checks = ""
+        work_sessions = math.floor(reps/2)
+        for _ in range(work_sessions):
+            checks += "✓"
+        check_mark_label.config(text=checks)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
@@ -65,10 +80,10 @@ canvas.grid(column=1, row=1)
 start_btn = Button(text="Start", highlightthickness=0, command=start_timer)
 start_btn.grid(column=0, row=2)
 
-reset_btn = Button(text="Reset", highlightthickness=0)
+reset_btn = Button(text="Reset", highlightthickness=0, command=reset_timer)
 reset_btn.grid(column=3, row=2)
 
-check_mark_label = Label(text="✓", fg=GREEN, bg=YELLOW)
+check_mark_label = Label(fg=GREEN, bg=YELLOW)
 check_mark_label.grid(column=1, row=3)
 
 window.mainloop()
