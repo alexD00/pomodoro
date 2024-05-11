@@ -53,7 +53,7 @@ def count_down(count):
     canvas.itemconfig(timer_text, text=f"{count_min}:{count_sec}")
     if count > 0:
         global timer
-        timer = window.after(1, count_down, count - 1)  # count-1 will be the parameter of the count_down function
+        timer = window.after(1000, count_down, count - 1)  # count-1 will be the parameter of the count_down function
     else:
         start_timer()
         checks = ""
